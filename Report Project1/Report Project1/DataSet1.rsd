@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SharedDataSet xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/shareddatasetdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <DataSet Name="DataSet1">
+    <Query>
+      <DataSourceReference>DataSource1</DataSourceReference>
+      <DataSetParameters>
+        <DataSetParameter Name="@Teacher">
+          <ReadOnly>false</ReadOnly>
+          <Nullable>false</Nullable>
+          <OmitFromQuery>false</OmitFromQuery>
+          <rd:DbType>String</rd:DbType>
+        </DataSetParameter>
+        <DataSetParameter Name="@Subject">
+          <ReadOnly>false</ReadOnly>
+          <Nullable>false</Nullable>
+          <OmitFromQuery>false</OmitFromQuery>
+          <rd:DbType>String</rd:DbType>
+        </DataSetParameter>
+        <DataSetParameter Name="@Profession">
+          <ReadOnly>false</ReadOnly>
+          <Nullable>false</Nullable>
+          <OmitFromQuery>false</OmitFromQuery>
+          <rd:DbType>String</rd:DbType>
+        </DataSetParameter>
+      </DataSetParameters>
+      <CommandText>select 
+	LectorName,
+	SubjectFullName,
+	ActivityNameRu,
+	ProfessionName,
+	SemesterNameRu,
+	GradeNameRu,
+	[Hour],
+	LabHourTotal,
+	max(ConsultTotalHour) as ConsultTotalHour,
+	max(ExamTotalHour) as ExamTotalHour,
+	CreditTotalHour,
+	CourseworkTotalHour,
+	ROW_NUMBER() OVER (PARTITION BY LectorName,
+			SubjectFullName,
+			[Hour] ORDER BY LectorName ASC) AS RnkHour,
+	ROW_NUMBER() OVER (PARTITION BY LectorName,
+			SubjectFullName,
+			[LabHourTotal] ORDER BY LectorName ASC) AS RnkLab
+from dbo.fISITDistrib(@Teacher,@Subject,@Profession)
+where [Hour] is not null or LabHourTotal is not null or 
+	ConsultTotalHour is not null or ExamTotalHour is not null or
+	CreditTotalHour is not null or CourseworkTotalHour is not null
+group by LectorName,SubjectFullName,ActivityNameRu,ProfessionName,SemesterNameRu,GradeNameRu,[Hour],LabHourTotal,CreditTotalHour,CourseworkTotalHour</CommandText>
+    </Query>
+    <Fields>
+      <Field Name="LectorName">
+        <DataField>LectorName</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="SubjectFullName">
+        <DataField>SubjectFullName</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="ActivityNameRu">
+        <DataField>ActivityNameRu</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="ProfessionName">
+        <DataField>ProfessionName</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="SemesterNameRu">
+        <DataField>SemesterNameRu</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="GradeNameRu">
+        <DataField>GradeNameRu</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="Hour">
+        <DataField>Hour</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="LabHourTotal">
+        <DataField>LabHourTotal</DataField>
+        <rd:TypeName>System.Double</rd:TypeName>
+      </Field>
+      <Field Name="ConsultTotalHour">
+        <DataField>ConsultTotalHour</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="ExamTotalHour">
+        <DataField>ExamTotalHour</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="CreditTotalHour">
+        <DataField>CreditTotalHour</DataField>
+        <rd:TypeName>System.Decimal</rd:TypeName>
+      </Field>
+      <Field Name="CourseworkTotalHour">
+        <DataField>CourseworkTotalHour</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="RnkHour">
+        <DataField>RnkHour</DataField>
+        <rd:TypeName>System.Int64</rd:TypeName>
+      </Field>
+      <Field Name="RnkLab">
+        <DataField>RnkLab</DataField>
+        <rd:TypeName>System.Int64</rd:TypeName>
+      </Field>
+    </Fields>
+  </DataSet>
+</SharedDataSet>

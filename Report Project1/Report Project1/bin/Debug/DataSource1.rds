@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RptDataSource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="DataSource1">
+  <ConnectionProperties>
+    <Extension>SQLAZURE</Extension>
+    <ConnectString>Data Source=ldpmd.database.windows.net;Initial Catalog=ldpmd01</ConnectString>
+  </ConnectionProperties>
+  <DataSourceID>3af903d2-5cf8-4d00-8ba9-91eac01cc5b6</DataSourceID>
+</RptDataSource>
